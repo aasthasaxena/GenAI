@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoundPrep — Interview Prep for ISB Students</title>
+<style>
+  :root{
+    --bg:#0f1115;
+    --panel:#171a21;
+    --panel2:#1e222b;
+    --border:#2a2f3a;
+    --text:#eef0f3;
+    --muted:#9aa3b2;
+    --accent:#6ee7b7;
+    --accent2:#60a5fa;
+    --warn:#fbbf24;
+    --danger:#f87171;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(circle at 20% -10%, #1b2230 0%, var(--bg) 55%);
+    color:var(--text);
+    min-height:100vh;
+    padding:32px 16px 64px;
+  }
+  .wrap{max-width:820px;margin:0 auto;}
+  header{text-align:center;margin-bottom:28px;}
+  header h1{
+    font-size:2.1rem;margin:0 0 6px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    letter-spacing:-0.5px;
+  }
+  header p{color:var(--muted);margin:0;font-size:0.95rem;}
+
+  .steps{display:flex;justify-content:center;gap:10px;margin:22px 0 30px;flex-wrap:wrap;}
+  .step-pill{
+    padding:6px 14px;border-radius:999px;font-size:0.8rem;
+    border:1px solid var(--border);color:var(--muted);background:var(--panel);
+  }
+  .step-pill.active{border-color:var(--accent);color:var(--accent);background:#12291f;}
+  .step-pill.done{border-color:var(--accent2);color:var(--accent2);}
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:24px;
+    margin-bottom:18px;
+    box-shadow:0 10px 30px -15px rgba(0,0,0,0.5);
+  }
+  .card h2{margin:0 0 4px;font-size:1.15rem;}
+  .card .sub{color:var(--muted);font-size:0.85rem;margin-bottom:16px;}
+  label{display:block;font-size:0.85rem;color:var(--muted);margin:14px 0 6px;}
+  textarea, input[type=text]{
+    width:100%;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:8px;
+    color:var(--text);
+    padding:12px;
+    font-size:0.92rem;
+    font-family:inherit;
+    resize:vertical;
+  }
+  textarea:focus, input:focus{outline:1px solid var(--accent);border-color:var(--accent);}
+  .row{display:flex;gap:14px;flex-wrap:wrap;}
+  .row > div{flex:1;min-width:220px;}
+
+  button{
+    cursor:pointer;
+    border:none;
+    border-radius:8px;
+    padding:11px 20px;
+    font-size:0.92rem;
+    font-weight:600;
+    transition:transform .1s ease, opacity .15s ease;
+  }
+  button:active{transform:scale(0.97);}
+  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#0b0d11;}
+  .btn-secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border);}
+  .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
+  button:disabled{opacity:0.4;cursor:not-allowed;}
+  .actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;}
+
+  .hidden{display:none !important;}
+
+  .tag{
+    display:inline-block;background:#12291f;color:var(--accent);
+    border:1px solid #1f5340;border-radius:999px;padding:3px 10px;
+    font-size:0.75rem;margin:3px 4px 0 0;
+  }
+  .qcounter{color:var(--muted);font-size:0.8rem;margin-bottom:8px;}
+  .question-box{
+    background:var(--panel2);border:1px solid var(--border);border-radius:10px;
+    padding:16px;margin-bottom:14px;font-size:1.02rem;line-height:1.5;
+  }
+  .question-box .src{display:block;margin-top:8px;font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;}
+
+  .feedback{
+    background:var(--panel2);border:1px solid var(--border);border-radius:10px;
+    padding:16px;margin-top:16px;
+  }
+  .feedback h3{margin:0 0 10px;font-size:0.95rem;}
+  .score-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .score-circle{
+    width:56px;height:56px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:1.05rem;flex-shrink:0;
+    border:3px solid var(--accent);color:var(--accent);
+  }
+  .fb-list{margin:0;padding-left:18px;font-size:0.88rem;line-height:1.7;color:var(--text);}
+  .fb-list li.good{color:var(--accent);}
+  .fb-list li.warn{color:var(--warn);}
+  .fb-list li.bad{color:var(--danger);}
+
+  .stats{display:flex;gap:16px;justify-content:center;margin-top:6px;flex-wrap:wrap;}
+  .stat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:center;min-width:120px;}
+  .stat .n{font-size:1.4rem;font-weight:700;color:var(--accent);}
+  .stat .l{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;}
+
+  footer{text-align:center;color:var(--muted);font-size:0.75rem;margin-top:30px;}
+  .scope-note{font-size:0.72rem;color:var(--muted);margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>RoundPrep</h1>
+    <p>Interview prep for ISB students — paste your JD, practice with mock questions, get instant feedback.</p>
+  </header>
+
+  <div class="steps">
+    <div class="step-pill active" id="pill-1">1 · Setup</div>
+    <div class="step-pill" id="pill-2">2 · Mock Question</div>
+    <div class="step-pill" id="pill-3">3 · Feedback</div>
+  </div>
+
+  <!-- STEP 1: Paste JD + past interview questions -->
+  <div class="card" id="step1">
+    <h2>Step 1 · Paste your target JD &amp; past interview questions</h2>
+    <div class="sub">This is what RoundPrep uses to build your mock question bank.</div>
+
+    <label for="companyRole">Target company &amp; role</label>
+    <input type="text" id="companyRole" placeholder="e.g. Unilever — Brand Manager (LIME/MT)">
+
+    <label for="jd">Job description (paste full JD)</label>
+    <textarea id="jd" rows="6" placeholder="Paste the job description here...">We are looking for a Brand Manager to lead go-to-market strategy, drive consumer insights led innovation, manage P&amp;L, own digital marketing campaigns, and collaborate cross-functionally with sales and R&amp;D to grow market share.</textarea>
+
+    <label for="resume">Your resume (paste as text)</label>
+    <textarea id="resume" rows="6" placeholder="Paste your resume text here — experience bullets, projects, skills..."></textarea>
+
+    <label for="pastQ">Past interview questions (one per line, optional)</label>
+    <textarea id="pastQ" rows="4" placeholder="e.g.&#10;Walk me through your resume&#10;Why marketing after engineering?&#10;Pitch me a product in 60 seconds">Walk me through your resume
+Why marketing, and why this company?
+Tell me about a time you led a team under pressure</textarea>
+
+    <div class="actions">
+      <button class="btn-primary" id="startBtn">Build my prep set →</button>
+    </div>
+    <div class="scope-note">Note: this prototype does not connect to your KMP database — that's out of scope for v1.</div>
+  </div>
+
+  <!-- STEP 2: Ask mock question -->
+  <div class="card hidden" id="step2">
+    <h2>Step 2 · Mock interview question</h2>
+    <div class="sub" id="targetLine">Practicing for: —</div>
+
+    <div class="qcounter" id="qCounter">Question 1</div>
+    <div class="question-box" id="questionText">—
+      <span class="src" id="questionSrc"></span>
+    </div>
+
+    <label for="answer">Your answer</label>
+    <textarea id="answer" rows="6" placeholder="Type your answer as you'd say it out loud..."></textarea>
+
+    <div class="actions">
+      <button class="btn-primary" id="feedbackBtn">Get feedback →</button>
+      <button class="btn-secondary" id="skipBtn">Next question →</button>
+    </div>
+
+    <div class="feedback hidden" id="feedbackBox">
+      <h3>Feedback</h3>
+      <div class="score-row">
+        <div class="score-circle" id="scoreCircle">—</div>
+        <div id="scoreLabel" style="color:var(--muted);font-size:0.88rem;"></div>
+      </div>
+      <ul class="fb-list" id="feedbackList"></ul>
+      <div class="actions">
+        <button class="btn-secondary" id="nextAfterFeedback">Next question →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Session summary -->
+  <div class="card hidden" id="step3">
+    <h2>Session summary</h2>
+    <div class="sub">Your success metric: number of repeat interviews. Come back and run this set again to beat your average.</div>
+    <div class="stats">
+      <div class="stat"><div class="n" id="statCount">0</div><div class="l">Questions answered</div></div>
+      <div class="stat"><div class="n" id="statAvg">0</div><div class="l">Avg score /10</div></div>
+      <div class="stat"><div class="n" id="statSessions">1</div><div class="l">Sessions this visit</div></div>
+    </div>
+    <div class="actions" style="justify-content:center;margin-top:22px;">
+      <button class="btn-primary" id="restartBtn">Practice again →</button>
+      <button class="btn-ghost" id="editSetupBtn">Edit JD / setup</button>
+    </div>
+  </div>
+
+  <footer>RoundPrep v1 prototype · built for the GenAI product exercise, ISB</footer>
+</div>
+
+<script>
+(function(){
+  const STOPWORDS = new Set(["the","and","for","with","that","this","are","you","your","will","have","from","our","team","role","work","across","into","able","using","drive","lead","strong","looking","who","can","also","their","they","them","each","other","more","such","about","over","under","between","within","required","preferred","years","experience","including","etc","a","an","of","to","in","on","is","as","be","or","at","by","we"]);
+
+  let jdKeywords = [];
+  let resumeKeywords = [];
+  let companyRoleVal = "";
+  let questionBank = [];
+  let qIndex = 0;
+  let scores = [];
+  let sessions = 1;
+
+  function extractKeywords(text){
+    const words = text.toLowerCase().replace(/[^a-z0-9&\s]/g," ").split(/\s+/).filter(Boolean);
+    const freq = {};
+    words.forEach(w=>{
+      if(w.length<4 || STOPWORDS.has(w)) return;
+      freq[w] = (freq[w]||0)+1;
+    });
+    return Object.keys(freq).sort((a,b)=>freq[b]-freq[a]).slice(0,8);
+  }
+
+  function buildTemplatedQuestions(role, keywords){
+    const k = (i)=> keywords[i] || (keywords[0] || "this area");
+    const roleLabel = role || "this role";
+    return [
+      {q:`This JD emphasizes "${k(0)}". Tell me about a project where you drove ${k(0)} — what was your specific role?`, src:"Generated from JD keyword"},
+      {q:`How would you approach ${k(1)} in your first 90 days as ${roleLabel}?`, src:"Generated from JD keyword"},
+      {q:`Walk me through a time you had to balance ${k(2)} against a tight deadline or budget.`, src:"Generated from JD keyword"},
+      {q:`Why do you think your background prepares you for ${roleLabel}, specifically around ${k(3)}?`, src:"Generated from JD keyword"},
+      {q:`If you had to improve ${k(0)} with zero extra budget, what's the first thing you'd try?`, src:"Generated from JD keyword"}
+    ];
+  }
+
+  function buildResumeQuestions(role, resumeKw, jdKw){
+    const rk = (i)=> resumeKw[i] || (resumeKw[0] || "that experience");
+    const roleLabel = role || "this role";
+    // overlap between resume and JD -> the strongest bridge question
+    const overlap = resumeKw.filter(w => jdKw.includes(w));
+    const bridge = overlap[0] || rk(0);
+    const qs = [
+      {q:`Walk me through your resume in under 2 minutes, connecting it to why you want ${roleLabel}.`, src:"Generated from resume"},
+      {q:`Your resume mentions "${rk(0)}". Tell me the hardest decision you made there and why.`, src:"Generated from resume"},
+      {q:`I see "${rk(1)}" on your resume — how does that experience prepare you for ${roleLabel}?`, src:"Generated from resume"}
+    ];
+    if(overlap.length){
+      qs.push({q:`Both your resume and this JD point to "${bridge}". Make the strongest case you can for why your "${bridge}" experience is directly relevant here.`, src:"Generated from resume + JD overlap"});
+    }
+    return qs;
+  }
+
+  function buildQuestionBank(){
+    const jd = document.getElementById('jd').value.trim();
+    const resume = document.getElementById('resume').value.trim();
+    const pastRaw = document.getElementById('pastQ').value.trim();
+    companyRoleVal = document.getElementById('companyRole').value.trim();
+
+    jdKeywords = extractKeywords(jd);
+    resumeKeywords = resume ? extractKeywords(resume) : [];
+
+    const pastQs = pastRaw ? pastRaw.split('\n').map(s=>s.trim()).filter(Boolean).map(q=>({q, src:"From your past interview questions"})) : [];
+    const resumeQs = resumeKeywords.length ? buildResumeQuestions(companyRoleVal, resumeKeywords, jdKeywords) : [];
+    const generated = buildTemplatedQuestions(companyRoleVal, jdKeywords);
+
+    // Order: past questions (real, high-signal) -> resume-grounded -> JD-generated
+    questionBank = [...pastQs, ...resumeQs, ...generated];
+    qIndex = 0;
+    scores = [];
+  }
+
+  function setActivePill(n){
+    [1,2,3].forEach(i=>{
+      const el = document.getElementById('pill-'+i);
+      el.classList.remove('active','done');
+      if(i < n) el.classList.add('done');
+      if(i === n) el.classList.add('active');
+    });
+  }
+
+  function showQuestion(){
+    if(qIndex >= questionBank.length){ qIndex = 0; } // loop the set
+    const item = questionBank[qIndex];
+    document.getElementById('qCounter').textContent = `Question ${qIndex+1} of ${questionBank.length}`;
+    document.getElementById('questionText').firstChild.textContent = item.q + " ";
+    document.getElementById('questionSrc').textContent = item.src;
+    document.getElementById('answer').value = "";
+    document.getElementById('feedbackBox').classList.add('hidden');
+    const label = companyRoleVal ? companyRoleVal : "your target role";
+    document.getElementById('targetLine').textContent = `Practicing for: ${label}`;
+  }
+
+  function scoreAnswer(answer, keywords){
+    const notes = [];
+    let score = 4; // baseline
+    const wc = answer.trim().split(/\s+/).filter(Boolean).length;
+
+    // Length check
+    if(wc < 25){
+      notes.push({t:"Your answer is quite short — aim for 90–120 seconds spoken (~120-180 words) so you show enough depth.", cls:"bad"});
+    } else if(wc > 260){
+      notes.push({t:"This is running long. Tighten it — interviewers reward concise, structured answers over exhaustive ones.", cls:"warn"});
+      score += 0.5;
+    } else {
+      notes.push({t:"Good length — enough room to show depth without rambling.", cls:"good"});
+      score += 1.5;
+    }
+
+    // STAR structure heuristic
+    const lower = answer.toLowerCase();
+    const hasSituation = /situation|context|when i|while working|during/.test(lower);
+    const hasAction = /i did|i led|i built|i drove|i created|i managed|i decided|i proposed/.test(lower);
+    const hasResult = /result|impact|increased|reduced|grew|achieved|led to|generated|saved|%/.test(lower);
+    let starHits = [hasSituation,hasAction,hasResult].filter(Boolean).length;
+    if(starHits >= 2){
+      notes.push({t:"Clear STAR-style structure detected (situation → action → result). Keep this.", cls:"good"});
+      score += 2;
+    } else {
+      notes.push({t:"Structure isn't obvious yet — try Situation → Action → Result so the interviewer can follow the arc.", cls:"warn"});
+    }
+
+    if(hasResult){
+      notes.push({t:"Nice — you quantified or named an outcome. Numbers make answers memorable.", cls:"good"});
+      score += 1.5;
+    } else {
+      notes.push({t:"No measurable outcome mentioned. Add a number or concrete result if you have one.", cls:"bad"});
+    }
+
+    // Keyword relevance to JD
+    const matched = keywords.filter(k => lower.includes(k));
+    if(matched.length >= 2){
+      notes.push({t:`Good — your answer naturally touches JD themes: ${matched.slice(0,3).join(', ')}.`, cls:"good"});
+      score += 1.5;
+    } else if(keywords.length){
+      notes.push({t:`Try tying your answer back to what this JD cares about, e.g. "${keywords[0]}".`, cls:"warn"});
+    }
+
+    // Resume grounding
+    const resumeMatched = resumeKeywords.filter(k => lower.includes(k));
+    if(resumeMatched.length){
+      notes.push({t:`You grounded this in your own experience (mentioned "${resumeMatched[0]}") — that's exactly what makes an answer credible.`, cls:"good"});
+      score += 0.5;
+    } else if(resumeKeywords.length){
+      notes.push({t:`Consider anchoring this in a specific resume example so it's easy for you to defend in the actual interview.`, cls:"warn"});
+    }
+
+    // Filler words
+    const fillerRegex = /\b(um+|uh+|like,|you know|basically|actually|sort of|kind of)\b/gi;
+    const fillerCount = (answer.match(fillerRegex)||[]).length;
+    if(fillerCount >= 3){
+      notes.push({t:`Detected ${fillerCount} filler phrases (um, like, basically...). Trim these for a sharper delivery.`, cls:"bad"});
+    } else {
+      score += 0.5;
+    }
+
+    score = Math.max(1, Math.min(10, Math.round(score*10)/10));
+    return {score, notes};
+  }
+
+  function renderFeedback(result){
+    document.getElementById('feedbackBox').classList.remove('hidden');
+    document.getElementById('scoreCircle').textContent = result.score + "/10";
+    let circleColor = "var(--accent)";
+    if(result.score < 5) circleColor = "var(--danger)";
+    else if(result.score < 7.5) circleColor = "var(--warn)";
+    document.getElementById('scoreCircle').style.borderColor = circleColor;
+    document.getElementById('scoreCircle').style.color = circleColor;
+    document.getElementById('scoreLabel').textContent = result.score >= 7.5 ? "Strong answer — minor polish only." : result.score >= 5 ? "Solid start — a few gaps to close." : "Needs another pass before the real thing.";
+
+    const list = document.getElementById('feedbackList');
+    list.innerHTML = "";
+    result.notes.forEach(n=>{
+      const li = document.createElement('li');
+      li.textContent = n.t;
+      li.className = n.cls;
+      list.appendChild(li);
+    });
+  }
+
+  function updateSummaryStats(){
+    document.getElementById('statCount').textContent = scores.length;
+    const avg = scores.length ? Math.round((scores.reduce((a,b)=>a+b,0)/scores.length)*10)/10 : 0;
+    document.getElementById('statAvg').textContent = avg;
+    document.getElementById('statSessions').textContent = sessions;
+  }
+
+  // Feature 1 (top priority): Paste JD + past Qs -> Build prep set. Must work on click.
+  document.getElementById('startBtn').addEventListener('click', function(){
+    const jd = document.getElementById('jd').value.trim();
+    if(!jd){
+      alert("Paste a job description first — RoundPrep needs it to build relevant questions.");
+      return;
+    }
+    buildQuestionBank();
+    document.getElementById('step1').classList.add('hidden');
+    document.getElementById('step2').classList.remove('hidden');
+    document.getElementById('step3').classList.add('hidden');
+    setActivePill(2);
+    showQuestion();
+  });
+
+  document.getElementById('editSetupBtn').addEventListener('click', function(){
+    document.getElementById('step3').classList.add('hidden');
+    document.getElementById('step1').classList.remove('hidden');
+    setActivePill(1);
+  });
+
+  document.getElementById('feedbackBtn').addEventListener('click', function(){
+    const answer = document.getElementById('answer').value.trim();
+    if(!answer){
+      alert("Type an answer first, then get feedback.");
+      return;
+    }
+    const result = scoreAnswer(answer, jdKeywords);
+    scores.push(result.score);
+    renderFeedback(result);
+  });
+
+  document.getElementById('skipBtn').addEventListener('click', nextQuestion);
+  document.getElementById('nextAfterFeedback').addEventListener('click', nextQuestion);
+
+  function nextQuestion(){
+    qIndex++;
+    if(qIndex >= questionBank.length){
+      document.getElementById('step2').classList.add('hidden');
+      document.getElementById('step3').classList.remove('hidden');
+      setActivePill(3);
+      updateSummaryStats();
+    } else {
+      showQuestion();
+    }
+  }
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    sessions++;
+    qIndex = 0;
+    scores = [];
+    document.getElementById('step3').classList.add('hidden');
+    document.getElementById('step2').classList.remove('hidden');
+    setActivePill(2);
+    showQuestion();
+  });
+
+})();
+</script>
+</body>
+</html>
